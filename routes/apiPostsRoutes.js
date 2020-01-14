@@ -122,7 +122,6 @@ apiPostsRoutes.get("/:id/comments", function(request, response) {
           }
         })
         .catch()
-
       //console.log(coments);
     })
     .catch( error => {
