@@ -104,7 +104,36 @@ apiPostsRoutes.get("/", function(request, response) {
 
 
 //GET	/api/posts/:id/comments	Returns an array of all the comment objects associated with the post with the specified id.
+apiPostsRoutes.get("/:id/comments", function(request, response) {
+  const id = request.params.id;
+  ProjectData.findCommentById(id)
+    .then(coments => {
+      ProjectData.findById(id)
+        .then(check => {
+          if (check.length == 0) {
+            response.status(404).json(
+              {
+                message: "The post with the specified ID does not exist."
+              }
+            )
+          }
+          else {
+            response.status(200).json(coments);
+          }
+        })
+        .catch()
 
+      //console.log(coments);
+    })
+    .catch( error => {
+      console.log(error);
+      response.status(500).json(
+        {
+          error: "The comments information could not be retrieved."
+        }
+      )
+    })
+});
 
 //DELETE	/api/posts/:id	Removes the post with the specified id and returns the deleted post object. You may need to make additional calls to the database in order to satisfy this requirement.
 
