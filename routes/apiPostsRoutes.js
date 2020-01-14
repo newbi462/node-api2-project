@@ -1,5 +1,9 @@
 //Separate the endpoints that begin with /api/posts into a separate Express Router
+const express = require('express');
 
+const ProjectData = require("./../data/db.js");
+
+const apiPostsRoutes = express.Router();
 
 
 
@@ -10,7 +14,21 @@
 
 
 //GET	/api/posts	Returns an array of all the post objects contained in the database.
-
+apiPostsRoutes.get("/", function(request, response) {
+  ProjectData.find()
+    .then(posts => {
+      response.status(200).json(posts);
+      console.log(posts);
+    })
+    .catch( error => {
+      console.log(error);
+      response.status(500).json(
+        {
+          error: "The posts information could not be retrieved."
+        }
+      )
+    })
+});
 
 //GET	/api/posts/:id	Returns the post object with the specified id.
 
@@ -22,3 +40,6 @@
 
 
 //PUT	/api/posts/:id	Updates the post with the specified id using data from the request body. Returns the modified document, NOT the original.
+
+
+module.exports = apiPostsRoutes;
