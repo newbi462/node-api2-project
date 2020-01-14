@@ -35,7 +35,33 @@ apiPostsRoutes.post("/", function(request, response) {
 });
 
 //POST	/api/posts/:id/comments	Creates a comment for the post with the specified id using information sent inside of the request body.
+apiPostsRoutes.post("/:id/comments", function(request, response) {
+  const newPostComent = request.body;
+  const id = request.params.id;
+  console.log(newPostComent);
+  ProjectData.findById(id)
+    .then(posts => {
+      if (posts.length == 0) {
+        response.status(404).json(
+          {
+            message: "The post with the specified ID does not exist."
+          }
+        )
+      }
+      if (typeof newPostComent.text != "string") {
+        response.status(400).json(
+          {
+            errorMessage: "Please provide text for the comment."
+          }
+        )
+      }
+      //response.status(200).json(posts);
+      console.log(posts.length);
+    })
+    .catch(
 
+    )
+});
 
 //GET	/api/posts	Returns an array of all the post objects contained in the database.
 apiPostsRoutes.get("/", function(request, response) {
