@@ -55,12 +55,32 @@ apiPostsRoutes.post("/:id/comments", function(request, response) {
           }
         )
       }
-      //response.status(200).json(posts);
-      console.log(posts.length);
+      else {
+        ProjectData.insertComment(newPostComent)
+          .then(comentPost => {
+            response.status(201).json({
+              addedYourNewComent: newPostComent.text
+            })
+          })
+          .catch( error => {
+            console.log(error);
+            response.status(500).json(
+              {
+                error: "2 There was an error while saving the comment to the database"
+              }
+            )
+          })
+      }
+      //console.log(posts.length);
     })
-    .catch(
-
-    )
+    .catch( error => {
+      console.log(error);
+      response.status(500).json(
+        {
+          error: "There was an error while saving the comment to the database"
+        }
+      )
+    })
 });
 
 //GET	/api/posts	Returns an array of all the post objects contained in the database.
