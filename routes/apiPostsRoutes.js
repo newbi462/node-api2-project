@@ -8,7 +8,31 @@ const apiPostsRoutes = express.Router();
 
 
 //POST	/api/posts	Creates a post using the information sent inside the request body.
-
+apiPostsRoutes.post("/", function(request, response) {
+  const newPost = request.body;
+  ProjectData.insert(newPost)
+    .then(post => {
+      //console.log(newPost);
+      if (typeof newPost.title == "string" && typeof newPost.contents == "string") {
+        response.status(201).json(post);
+      }
+      else {
+        response.status(400).json(
+          {
+            errorMessage: "Please provide title and contents for the post."
+          }
+        )
+      }
+    })
+    .catch( error => {
+      console.log(error);
+      response.status(500).json(
+        {
+          error: "There was an error while saving the post to the database"
+        }
+      )
+    })
+});
 
 //POST	/api/posts/:id/comments	Creates a comment for the post with the specified id using information sent inside of the request body.
 
@@ -18,7 +42,7 @@ apiPostsRoutes.get("/", function(request, response) {
   ProjectData.find()
     .then(posts => {
       response.status(200).json(posts);
-      console.log(posts);
+      //console.log(posts);
     })
     .catch( error => {
       console.log(error);
